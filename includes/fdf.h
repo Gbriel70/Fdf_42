@@ -13,6 +13,7 @@
 // MACROS UTILS
 # define TRUE 1
 # define FALSE 0
+# define BACKGROUND_COLOR 0x000000
 # define SCREEN_WIDTH 1300
 # define SCREEN_HEIGHT 900
 # define STAGE_NONE 0
@@ -22,33 +23,30 @@
 # define STAGE_FULL 4
 
 // STRUCTS UTILS
-typedef struct s_point
+typedef struct s_references
 {
     float       x;
     float       y;
     float       z;
-}               t_point;
-
-typedef struct s_color
-{
-    int         r;
-    int         g;
-    int         b;
-}               t_color;
-
-typedef struct s_references
-{
-    t_point     point;
-    t_color     color;
+    uint32_t    color;
 }               t_references;
 
 typedef struct s_map
 {
-    int         **matrix;
-    int         width;
-    int         height;
-    float       z_scale;
+    int             width;
+    int             height;
+    float           z_scale;
+    t_references    **matrix;
 }               t_map;
+
+typedef struct s_draw_line
+{
+    int     d_x;
+    int     d_y;
+    int     control;
+    int     inc_x;
+    int     inc_y;
+}               t_draw_line;
 
 typedef struct s_camera
 {
@@ -66,20 +64,26 @@ typedef struct s_fdf
     mlx_image_t     *img;
 }                   t_fdf;
 
-
 // ERROS UTILS
 void handle_error(char *error_message, int stage, void *ptr);
 void cleanup_resources(t_fdf *fdf);
 
-// READ UTILS
+// READ MAP
 t_map *map_read(char *map_name);
+
+// READ MAP UTILS
+void convert_map(t_map *map, char *n_map);
+void center_map(t_map *map);
 
 // CHECK UTILS
 short   validate_map(char *map_name);
 short	validate_map_init(t_map *map);
 
 // UTILS
-void  ft_free_array(char **array);
-int    **alloc_matrix(int height, int width);
+void ft_free_array(char **array);
+t_references **alloc_matrix(int height, int width);
+int check_lines(int fd, int size);
+int	ft_hex_to_int(char *hexa);
+
 
 # endif

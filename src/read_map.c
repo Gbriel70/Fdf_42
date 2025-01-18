@@ -35,6 +35,8 @@ static int recive_width(char *map_name)
     while (split_line[count] && split_line[count][0] != '\n')
         count++;
     ft_free_array(split_line);
+    if (!check_lines(fd, count))
+        return (close(fd), 0);
     close(fd);
     return (count);
 }
@@ -58,33 +60,6 @@ static int recive_height(char *map_name)
     return (height);
 }
 
-static void fill_matrix(t_map *map, char *map_name)
-{
-    int     fd;
-    char    *line;
-    char    **split_line;
-    int     i;
-    int     j;
-
-    fd = open(map_name, O_RDONLY);
-    i = 0;
-    while ((line = get_next_line(fd)) && i < map->height)
-    {
-        split_line = ft_split(line, ' ');
-        if (!split_line)
-            handle_error("Split failed", STAGE_MAP, map);
-        j = 0;
-        while (split_line[j] && j < map->width)
-        {
-            map->matrix[i][j] = ft_atoi(split_line[j]);
-            j++;
-        }
-        ft_free_array(split_line);
-        free(line);
-        i++;
-    }
-    close(fd);   
-}
 
 t_map *map_read(char *map_name)
 {
@@ -100,6 +75,7 @@ t_map *map_read(char *map_name)
     map->matrix = alloc_matrix(map->height, map->width);
     if (!map->matrix)
         handle_error("Malloc failed", STAGE_MAP, map);
-    fill_matrix(map, map_name);
+    convert_map(map, map_name);
+    center_map(map);
     return (map);
 }

@@ -1,20 +1,18 @@
 #include "../includes/fdf.h"
 
-static void cleanup_matrix(int **matrix, int height)
+static void cleanup_matrix(t_references **matrix, int height)
 {
     int i;
 
-    if (matrix)
+    if (!matrix)
+        return ;
+    i = -1;
+    while (++i < height)
     {
-        i = 0;
-        while (i < height)
-        {
-            if (matrix[i])
-                free(matrix[i]);
-            i++;
-        }
-        free(matrix);
+        if (matrix[i])
+            free(matrix[i]);
     }
+    free(matrix);
 }
 
 static void cleanup_mlx(mlx_t *mlx, mlx_image_t *img)
@@ -51,7 +49,9 @@ void cleanup_resources(t_fdf *fdf)
 
 void handle_error(char *error_message, int stage, void *ptr)
 {
-    ft_printf("Error\n%s\n", error_message);
+    ft_putstr_fd("Error\n", STDERR_FILENO);
+    perror(error_message);
+
     if (stage == STAGE_MAP)
     {
         if (ptr)
