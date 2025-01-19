@@ -66,24 +66,17 @@ typedef struct s_fdf
 
 // ERROS UTILS
 void handle_error(char *error_message, int stage, void *ptr);
-void cleanup_resources(t_fdf *fdf);
-
-// READ MAP
-t_map *map_read(char *map_name);
-
-// READ MAP UTILS
-void convert_map(t_map *map, char *n_map);
-void center_map(t_map *map);
+void cleanup_resources(t_fdf *fdf, int stage);
 
 // CHECK UTILS
 short   validate_map(char *map_name);
-short	validate_map_init(t_map *map);
+
+// READ MAP
+t_map *read_map(char *map_name);
+
+// READ MAP UTILS
 
 // UTILS
-void ft_free_array(char **array);
-t_references **alloc_matrix(int height, int width);
-int check_lines(int fd, int size);
-int	ft_hex_to_int(char *hexa);
-
+void free_split(char **split);
 
 # endif
