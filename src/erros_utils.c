@@ -1,20 +1,15 @@
 #include "../includes/fdf.h"
 
 
-void cleanup_resources(t_fdf *fdf, int stage)
+void clear_invalid_map(t_fdf *fdf, t_map *map)
 {
-    (void)fdf;
-
-    if (stage >= STAGE_MAP)
-    {
-        ft_printf("Cleaning map resources\n");
-    }
-    return ;
+    free(map);
+    free(fdf);
+    print_error(1);
 }
 
-void handle_error(char *error_message, int stage, void *ptr)
+void print_error(int stage)
 {
-    ft_printf("Error: %s\n", error_message);
-    cleanup_resources((t_fdf *)ptr, stage);
-    exit(EXIT_FAILURE);
+    if (stage == 1)
+        ft_printf("\033[31;3mError, invalid map name :(\033[0m\n");
 }

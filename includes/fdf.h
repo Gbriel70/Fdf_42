@@ -9,6 +9,7 @@
 # include "../libs/libft_plus/includes/not_in_standard_includes/get_next_line.h"
 # include "../libs/libft_plus/includes/ft_string_functions.h"
 # include "../libs/libft_plus/includes/not_in_standard_includes/not_in_standard.h"
+# include "../libs/libft_plus/includes/ft_ctype.h"
 
 // MACROS UTILS
 # define TRUE 1
@@ -65,16 +66,17 @@ typedef struct s_fdf
 }                   t_fdf;
 
 // ERROS UTILS
-void handle_error(char *error_message, int stage, void *ptr);
-void cleanup_resources(t_fdf *fdf, int stage);
+void clear_invalid_map(t_fdf *fdf, t_map *map);
+void print_error(int stage);
 
 // CHECK UTILS
 short   validate_map(char *map_name);
 
 // READ MAP
-t_map *read_map(char *map_name);
+t_map *read_map(char *map_name, t_fdf *fdf);
 
 // READ MAP UTILS
+short   valid_map_width(int fd, int width);
 
 // UTILS
 void free_split(char **split);
