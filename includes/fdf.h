@@ -17,11 +17,7 @@
 # define BACKGROUND_COLOR 0x000000
 # define SCREEN_WIDTH 1300
 # define SCREEN_HEIGHT 900
-# define STAGE_NONE 0
-# define STAGE_MAP 1
-# define STAGE_MATRIX 2
-# define STAGE_MLX 3
-# define STAGE_FULL 4
+# define HEXA_BASE 16
 
 // STRUCTS UTILS
 typedef struct s_references
@@ -68,6 +64,7 @@ typedef struct s_fdf
 // ERROS UTILS
 void clear_invalid_map(t_fdf *fdf, t_map *map);
 void print_error(int stage);
+void kill_everything(t_fdf *fdf);
 
 // CHECK UTILS
 short   validate_map(char *map_name);
@@ -77,6 +74,9 @@ t_map *read_map(char *map_name, t_fdf *fdf);
 
 // READ MAP UTILS
 short   valid_map_width(int fd, int width);
+t_references **set_matrix(int width, int height);
+void fill_matrix(t_map *map, char **split_line, int height);
+void	center_to_origin(t_map *map);
 
 // UTILS
 void free_split(char **split);

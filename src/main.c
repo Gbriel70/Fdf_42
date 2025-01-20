@@ -20,5 +20,6 @@ int main(int ac, char **av)
    if ((ac != 2) || (!validate_map(av[1])))
       ft_printf("Invalid map or map doesn't exist");
    init_fdf(&fdf, av[1]);
+   kill_everything(fdf);
    return 0;
 }

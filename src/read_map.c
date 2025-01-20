@@ -56,6 +56,28 @@ static int get_height(const char *map_name)
     return (height);
 }
 
+static void get_matrix(t_map *map, const char *map_name)
+{
+    int fd;
+    char *line;
+    char **split_line;
+    int height;
+
+    fd = open(map_name, O_RDONLY);
+    height = 0;
+    while(1)
+    {
+        line = get_next_line(fd);
+        if (line == NULL)
+            break ;
+        split_line = ft_split(line, ' ');
+        fill_matrix(map, split_line, height);
+        free_split(split_line);
+        free(line);
+        height++;
+    }
+}
+
 t_map *read_map(char *map_name, t_fdf *fdf)
 {
     t_map *map;
@@ -65,5 +87,10 @@ t_map *read_map(char *map_name, t_fdf *fdf)
     map->width = get_width(map_name);
     if ((!map->width) || (map->width < 2) || (map->height < 2))
         clear_invalid_map(fdf, map);
+    map->matrix = set_matrix(map->width, map->height);
+    if (!map->matrix)
+        ft_printf("Error alocate matrix");
+    get_matrix(map, map_name);
+    center_to_origin(map);
     return (map);
 }
