@@ -31,5 +31,4 @@ void draw_line(t_fdf *fdf, t_references start, t_references end)
 		else
 			draw_diag_line_y(fdf, start, end, line);
 	}
-
 }

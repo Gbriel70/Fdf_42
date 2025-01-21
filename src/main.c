@@ -8,10 +8,6 @@ void	init_fdf(t_fdf **fdf, char *map_name)
 	*fdf = (t_fdf *)malloc(sizeof(t_fdf));
 	if (!(*fdf))
 		ft_printf("Malloc failed");
-	(*fdf)->map = NULL;
-	(*fdf)->mlx = NULL;
-	(*fdf)->img = NULL;
-	(*fdf)->camera = NULL;
 	(*fdf)->map = read_map(map_name, (*fdf));
 	(*fdf)->mlx = mlx_init(SCREEN_WIDTH, SCREEN_HEIGHT, "\\[T]/", true);
 	(*fdf)->img = mlx_new_image((*fdf)->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -31,24 +27,27 @@ static float get_scale(t_fdf *fdf)
 		scale = scale_x;
 	else
 		scale = scale_y;
-	return (scale / 1.75);
+	return (scale / 1.55);
 }
 
 static t_camera *set_camera(t_fdf *fdf)
 {
 	t_camera	*camera;
 
-	camera = (t_camera *)malloc(sizeof(t_camera));
+	camera = malloc(sizeof(t_camera));
 	if (!camera)
+	{
 		ft_printf("Malloc failed");
-	camera->x = fdf->map->width / 2;
-	camera->y = fdf->map->height / 2;
-	camera->z = 1;
+		return (NULL);
+	}
 	camera->scale = get_scale(fdf);
+	camera->x = (SCREEN_WIDTH / 2);
+	camera->y = (SCREEN_HEIGHT / 2);
+	camera->z = 1;
 	if (fdf->map->z_scale <= 20)
 		camera->z = 10;
 	else if (fdf->map->z_scale > 720)
-		camera->z = 0.5;
+		camera->z = 0.03;
 	return (camera);
 }
 

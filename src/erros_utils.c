@@ -17,8 +17,6 @@ void	kill_everything(t_fdf *fdf)
 {
 	clear_matrix(fdf->map->matrix, fdf->map->height);
 	free(fdf->map);
-	free(fdf->mlx);
-	free(fdf->img);
 	free(fdf->camera);
 	free(fdf);
 }

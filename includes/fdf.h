@@ -14,10 +14,12 @@
 // MACROS UTILS
 # define TRUE 1
 # define FALSE 0
-# define BACKGROUND_COLOR 0x000000
 # define SCREEN_WIDTH 1300
 # define SCREEN_HEIGHT 900
+# define BACKGROUND_COLOR 0x000000
 # define HEXA_BASE 16
+# define X_AXIS_ANGLE_ROTATION_RADIUS 0.610865
+# define Z_AXIS_ANGLE_ROTATION_RADIUS 0.785398
 
 // STRUCTS UTILS
 typedef struct s_references
@@ -81,6 +83,8 @@ void				center_to_origin(t_map *map);
 // UTILS
 void				free_split(char **split);
 int					ft_abs(int n);
+uint32_t			put_alpha(uint32_t color);
+int					ft_hex_to_int(char *str);
 
 // RENDER
 void				render(t_fdf *fdf);
@@ -96,8 +100,11 @@ void				draw_line(t_fdf *fdf, t_references start, t_references end);
 // DRAW UTILS
 void				axis_y(t_fdf *fdf, t_references start, t_references end);
 void				axis_x(t_fdf *fdf, t_references start, t_references end);
-void				draw_diag_line_y(t_fdf fdf, t_references start, t_references end, t_draw_line line);
-void				draw_diag_line_x(t_fdf fdf, t_references start, t_references end, t_draw_line line);
+void				draw_diag_line_y(t_fdf *fdf, t_references start, t_references end, t_draw_line line);
+void				draw_diag_line_x(t_fdf *fdf, t_references start, t_references end, t_draw_line line);
+
+// COLORS
+int					get_color(int start, int end, int grad_len, int position);
 
 
 #endif
