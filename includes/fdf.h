@@ -1,6 +1,7 @@
 #ifndef FDF_H
 # define FDF_H
 
+// INCLUDES
 # include "../libs/MLX42/include/MLX42/MLX42.h"
 # include "../libs/libft_plus/includes/ft_ctype.h"
 # include "../libs/libft_plus/includes/ft_string_functions.h"
@@ -16,10 +17,10 @@
 # define FALSE 0
 # define SCREEN_WIDTH 1300
 # define SCREEN_HEIGHT 900
-# define BACKGROUND_COLOR 0x000000
-# define HEXA_BASE 16
-# define X_AXIS_ANGLE_ROTATION_RADIUS 0.610865
-# define Z_AXIS_ANGLE_ROTATION_RADIUS 0.785398
+# define BACKGROUND_COLOR 0x00000000
+# define DRAWING_COLOR 0x00FFFFFF
+# define COS_30 0.86602540378
+# define SIN_30 0.5
 
 // STRUCTS UTILS
 typedef struct s_references
@@ -27,84 +28,87 @@ typedef struct s_references
 	float			x;
 	float			y;
 	float			z;
-	uint32_t		color;
 }					t_references;
 
 typedef struct s_map
 {
+	t_references	*s_references;
+	struct s_map	*next;
 	int				width;
 	int				height;
-	float			z_scale;
-	t_references	**matrix;
+	float			scale;
 }					t_map;
 
-typedef struct s_draw_line
+typedef struct s_matrix_width
 {
-	int				d_x;
-	int				d_y;
+	float			matrix_width;
+	float			min_matrix_width;
+	float			max_matrix_width;
+}					t_matrix_width;
+
+typedef struct s_matrix_height
+{
+	float			matrix_height;
+	float			min_matrix_height;
+	float			max_matrix_height;
+}					t_matrix_height;
+
+typedef struct s_matrix_dimensions
+{
+	float			matrix_height;
+	float			matrix_width;
+}					t_matrix_dimensions;
+
+typedef struct s_data_draw_line
+{
+	int				dx;
+	int				dy;
 	int				control;
 	int				inc_x;
 	int				inc_y;
-}					t_draw_line;
-
-typedef struct s_camera
-{
-	float			x;
-	float			y;
-	float			z;
-	float			scale;
-}					t_camera;
+	mlx_image_t		*img;
+}					t_data_draw_line;
 
 typedef struct s_fdf
 {
-	t_map			*map;
-	t_camera		*camera;
+	t_map			*s_map;
 	mlx_t			*mlx;
 	mlx_image_t		*img;
-}					t_fdf;
+}				t_fdf;
 
-// ERROS UTILS
-void				clear_invalid_map(t_map *map, t_fdf *fdf);
-void				print_error(int stage);
-void				kill_everything(t_fdf *fdf);
 
-// CHECK UTILS
-short				validate_map(char *map_name);
+// INITIALIZATION UTILS
+void init_fdf(t_fdf **fdf, char *map_name);
+void background(mlx_image_t *img);
+void put_pixel(mlx_image_t *img, int start, int end, int color);
+
+// RUN FDF
+void run_fdf(t_fdf **fdf, char *map_name);
+
+// CHECK MAP FILE
+int check_map_format(const char *av);
+int	print_return(char *message, int return_value);
 
 // READ MAP
-t_map				*read_map(char *map_name, t_fdf *fdf);
-
-// READ MAP UTILS
-short				valid_map_width(int fd, int width);
-t_references		**set_matrix(int width, int height);
-void				fill_matrix(t_map *map, char **split_line, int height);
-void				center_to_origin(t_map *map);
-
-// UTILS
-void				free_split(char **split);
-int					ft_abs(int n);
-uint32_t			put_alpha(uint32_t color);
-int					ft_hex_to_int(char *str);
+t_map	*read_map(char *map_name);
 
 // RENDER
-void				render(t_fdf *fdf);
+void render(t_map *s_map, mlx_image_t *img);
 
 // RENDER UTILS
-void				scale(t_fdf *fdf, t_references *start, t_references *end);
-void				isometry(t_fdf *fdf, t_references *start, t_references *end);
-void				centralize(t_fdf *fdf, t_references *start, t_references *end);
+void get_map_scale(t_map *s_map);
+t_matrix_dimensions *get_matrix_dimensions(float **map_matrix, t_map *s_map);
+float **scale_dimension_matrix(t_map *s_map, float **map_matrix, t_matrix_dimensions *s_matrix_dimensions);
 
-// DRAW
-void				draw_line(t_fdf *fdf, t_references start, t_references end);
+// UTILS
+void free_split(char **split);
+void clean_data(t_map *s_map);
+void clean_matrix(float **map_matrix);
+int	ft_abs(int n);
+t_data_draw_line *new_line_data(mlx_image_t *img, float **converted_matrix, int start, int end);
 
-// DRAW UTILS
-void				axis_y(t_fdf *fdf, t_references start, t_references end);
-void				axis_x(t_fdf *fdf, t_references start, t_references end);
-void				draw_diag_line_y(t_fdf *fdf, t_references start, t_references end, t_draw_line line);
-void				draw_diag_line_x(t_fdf *fdf, t_references start, t_references end, t_draw_line line);
-
-// COLORS
-int					get_color(int start, int end, int grad_len, int position);
+// DRAW LINE
+void draw_line(mlx_image_t *img, float **converted_matrix, int start, int end);
 
 
 #endif

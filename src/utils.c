@@ -10,40 +10,56 @@ void free_split(char **split)
     free(split);
 }
 
-int ft_abs(int n)
+void clean_data(t_map *s_map)
+{
+	t_map *remove;
+
+	while (s_map)
+	{
+		remove = s_map;
+		s_map = s_map->next;
+		if (remove->s_references != NULL)
+		{
+			free(remove->s_references);
+			remove->s_references = NULL;
+		}
+		free(remove);
+	}
+}
+
+void clean_matrix(float **map_matrix)
+{
+	int x;
+
+	x = 0;
+	while (map_matrix[x] != NULL)
+		free(map_matrix[x++]);
+	free(map_matrix);
+}
+
+int	ft_abs(int n)
 {
 	if (n < 0)
 		return (-n);
 	return (n);
 }
 
-uint32_t put_alpha(uint32_t color)
+t_data_draw_line *new_line_data(mlx_image_t *img, float **converted_matrix, int start, int end)
 {
-	uint32_t	alpha;
-	unsigned char	*color_ptr;
+	t_data_draw_line *line_data;
 
-	alpha = color << 8;
-	color_ptr = (unsigned char *)&alpha;
-	*color_ptr = 255;
-	return (alpha);
-}
-
-int	ft_hex_to_int(char *str)
-{
-	int	result;
-	int	byte;
-
-	result = 0;
-	while (*str != ' ' && *str)
-	{
-		byte = *str++;
-		if (byte >= '0' && byte <= '9')
-			byte -= '0';
-		else if (byte >= 'a' && byte <= 'f')
-			byte = byte - 'a' + 10;
-		else if (byte >= 'A' && byte <= 'F')
-			byte = byte - 'A' + 10;
-		result = (result << 4) | (byte & 0xF);
-	}
-	return (result);
+	line_data = (t_data_draw_line *)malloc(sizeof(t_data_draw_line));
+	line_data->img = img;
+	line_data->dx = ft_abs(converted_matrix[end][0] - converted_matrix[start][0]);
+	line_data->dy = ft_abs(converted_matrix[end][1] - converted_matrix[start][1]);
+	line_data->control = 0;
+	if (converted_matrix[end][0] > converted_matrix[start][0])
+		line_data->inc_x = 1;
+	else
+		line_data->inc_x = -1;
+	if (converted_matrix[end][1] > converted_matrix[start][1])
+		line_data->inc_y = 1;
+	else
+		line_data->inc_y = -1;
+	return (line_data);
 }

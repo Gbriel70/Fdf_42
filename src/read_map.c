@@ -1,95 +1,97 @@
 #include "../includes/fdf.h"
 
-static t_map	*new_map(void)
+static t_map	*insert_node(t_map *head, t_map *s_list)
 {
-	t_map	*map;
+	t_map	*current;
 
-	map = malloc(sizeof(t_map));
-	if (!map)
-		ft_printf("Error alocate map");
-	map->width = 0;
-	map->height = 0;
-	map->z_scale = 0;
-	map->matrix = NULL;
-	return (map);
+	current = head;
+	if(!s_list)
+		return (head);
+	if (!head)
+	{
+		head = s_list;
+		current = head;
+	}
+	else
+	{
+		while (current->next)
+			current = current->next;
+		current->next = s_list;
+		current = current->next;
+	}
+	return (head);
 }
 
-static int	get_width(const char *map_name)
+static t_map *new_node(int x, int y, int z)
 {
-	int		fd;
-	int		count;
-	char	*line;
-	char	**div_line;
+	t_map *new;
 
-	fd = open(map_name, O_RDONLY);
-	line = get_next_line(fd);
-	div_line = ft_split(line, ' ');
-	count = 0;
-	while (div_line[count] && div_line[count][0] != '\n')
-		count++;
-	free(line);
-	free_split(div_line);
-	if (!valid_map_width(fd, count))
-		return (0);
-	return (count);
+	new = (t_map *)malloc(sizeof(t_map));
+	if (!new)
+		print_return("In function new_node Malloc failed", 0);
+	new->s_references = (t_references *)malloc(sizeof(t_references));
+	if (!new->s_references)
+	{
+		free(new);
+		print_return("In function new_node Malloc failed", 0);
+	}
+	new->s_references->x = x;
+	new->s_references->y = y;
+	new->s_references->z = z;
+	new->next = NULL;
+	return (new);
 }
 
-static int	get_height(const char *map_name)
+static t_map *new_list(char *line, int y)
 {
+	int x;
+	char **split_result;
+	t_map *s_list;
+
+	x = 0;
+	s_list = NULL;
+	split_result = ft_split(line, ' ');
+	if (!split_result)
+	{
+		free_split(split_result);
+		print_return("In function new_list split failed", 0);
+	}
+	while (split_result[x])
+	{
+		s_list = insert_node(s_list, new_node(x, y, ft_atoi(split_result[x])));
+		x++;
+	}
+	s_list->width = x;
+	free_split(split_result);
+	return (s_list);
+	
+}
+
+t_map	*read_map(char *map_name)
+{
+	t_map	*temp_map;
+	char 	*line;
 	int		fd;
-	int		height;
-	char	*line;
+	int		y;
 
 	fd = open(map_name, O_RDONLY);
-	height = 0;
+	y = 0;
+	temp_map = NULL;
 	while (1)
 	{
 		line = get_next_line(fd);
-		if (line == NULL)
+		if (!line)
 			break ;
-		height++;
+		temp_map = insert_node(temp_map, new_list(line, y));
+		y++;
 		free(line);
 	}
+	temp_map->height = y;
+	if (!temp_map || temp_map->width < 2 || temp_map->height < 2)
+	{
+		clean_data(temp_map);
+		print_return("File has no content or bad format", 0);
+	}
 	close(fd);
-	return (height);
-}
-
-static void get_matrix(t_map *map, const char *map_name)
-{
-    int fd;
-    char *line;
-    char **split_line;
-    int height;
-
-    fd = open(map_name, O_RDONLY);
-    if (fd < 0)
-    {
-        perror("Erro ao abrir o arquivo");
-        exit(EXIT_FAILURE);
-    }
-    height = 0;
-    while ((line = get_next_line(fd)) != NULL)
-    {
-        split_line = ft_split(line, ' ');
-        fill_matrix(map, split_line, height);
-        free_split(split_line);
-        free(line);
-        height++;
-    }
-    close(fd);
-}
-
-t_map	*read_map(char *map_name, t_fdf *fdf)
-{
-	t_map	*map;
-
-	map = new_map();
-	map->width = get_width(map_name);
-	map->height = get_height(map_name);
-	if ((map->width < 2) || (map->height < 2))
-		clear_invalid_map(map, fdf);
-	map->matrix = set_matrix(map->width, map->height);
-	get_matrix(map, map_name);
-	center_to_origin(map);
-	return (map);
+	return (temp_map);
 }
