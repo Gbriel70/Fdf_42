@@ -86,12 +86,12 @@ t_map	*read_map(char *map_name)
 		y++;
 		free(line);
 	}
-	temp_map->height = y;
-	if (!temp_map || temp_map->width < 2 || temp_map->height < 2)
+	if (!temp_map || temp_map->width < 2)
 	{
 		clean_data(temp_map);
-		print_return("File has no content or bad format", 0);
+		return (NULL);
 	}
+	temp_map->height = y;
 	close(fd);
 	return (temp_map);
 }

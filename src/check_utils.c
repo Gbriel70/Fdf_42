@@ -13,7 +13,9 @@ static short has_fdf_extension(const char *map_name)
 
 static short is_file_acessible(const char *map_name)
 {
-    int fd = open(map_name, O_RDONLY);
+    int fd;
+
+    fd = open(map_name, O_RDONLY);
     if (fd < 0)
         return (FALSE);
     close(fd);
@@ -25,7 +27,7 @@ int check_map_format(const char *map_name)
     if (!has_fdf_extension(map_name))
         print_return("File has no .fdf extension", 1);
     if (!is_file_acessible(map_name))
-        print_return("File does not exist or is not accessible", 1);
+        print_return("File does not exist or is not accessible or is empty", 1);
     return (0);
 }
 

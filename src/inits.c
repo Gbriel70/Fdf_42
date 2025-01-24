@@ -2,13 +2,16 @@
 
 void init_fdf(t_fdf **fdf, char *map_name)
 {
-	*fdf = (t_fdf *)malloc(sizeof(t_fdf));
+	*fdf = malloc(sizeof(t_fdf));
 	if (!(*fdf))
 		print_return("Malloc failed", 1);
 	(*fdf)->s_map = NULL;
 	(*fdf)->s_map = read_map(map_name);
 	if (!(*fdf)->s_map)
+	{
 		print_return("File has no content or bad format", 1);
+		return ;
+	}
 	(*fdf)->mlx = mlx_init(SCREEN_WIDTH, SCREEN_HEIGHT, "\\[T]/", true);
     if (!(*fdf)->mlx)
     {

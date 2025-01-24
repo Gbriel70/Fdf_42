@@ -53,16 +53,14 @@ mlx:
 	@cmake $(LIB_MLX_PATH) -B $(LIB_MLX_PATH)/build > /dev/null 2>&1
 	@make -C $(LIB_MLX_PATH)/build -j4 > /dev/null 2>&1
 
-%.o: %.c $(HEADERS)
+$(SRCS_PATH)/%.o: $(SRCS_PATH)/%.c $(HEADERS)
 	@echo "$(CYAN)Compiling $<...$(RESET)"
-	$(CC) $(CC_FLAGS) $(INCLUDES) -MMD -MP -c $< -o $@
+	$(CC) $(CC_FLAGS) $(INCLUDES) -c $< -o $@
 
 $(NAME): $(OBJS)
 	@echo "$(GREEN)Linking $(NAME)...$(RESET)"
 	$(CC) $(OBJS) $(CC_FLAGS) $(LIBFT) $(MLX) $(MLX_FLAGS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) Build complete!$(RESET)"
-
--include $(DEPS)
 
 #============================LEAKS============================#
 
@@ -70,7 +68,7 @@ $(NAME): $(OBJS)
 FILE ?=
 
 leak: all
-	@if [-z "$(FILE)"]; then \
+	@if [ -z "$(FILE)" ]; then \
 		echo "$(RED)Error: FILE variable is not set. Usage: make leak FILE=<path_to_fdf_file>"; \
 		exit 1; \
 	fi
