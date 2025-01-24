@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_map.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/24 09:22:40 by gcosta-m          #+#    #+#             */
+/*   Updated: 2025/01/24 09:26:29 by gcosta-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/fdf.h"
 
 static t_map	*insert_node(t_map *head, t_map *s_list)
@@ -5,7 +17,7 @@ static t_map	*insert_node(t_map *head, t_map *s_list)
 	t_map	*current;
 
 	current = head;
-	if(!s_list)
+	if (!s_list)
 		return (head);
 	if (!head)
 	{
@@ -22,9 +34,9 @@ static t_map	*insert_node(t_map *head, t_map *s_list)
 	return (head);
 }
 
-static t_map *new_node(int x, int y, int z)
+static t_map	*new_node(int x, int y, int z)
 {
-	t_map *new;
+	t_map	*new;
 
 	new = (t_map *)malloc(sizeof(t_map));
 	if (!new)
@@ -42,11 +54,11 @@ static t_map *new_node(int x, int y, int z)
 	return (new);
 }
 
-static t_map *new_list(char *line, int y)
+static t_map	*new_list(char *line, int y)
 {
-	int x;
-	char **split_result;
-	t_map *s_list;
+	int		x;
+	char	**split_result;
+	t_map	*s_list;
 
 	x = 0;
 	s_list = NULL;
@@ -64,13 +76,12 @@ static t_map *new_list(char *line, int y)
 	s_list->width = x;
 	free_split(split_result);
 	return (s_list);
-	
 }
 
 t_map	*read_map(char *map_name)
 {
 	t_map	*temp_map;
-	char 	*line;
+	char	*line;
 	int		fd;
 	int		y;
 
