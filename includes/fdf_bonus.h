@@ -78,6 +78,7 @@ typedef struct s_fdf
     int             mouse_x;
     int             mouse_y;
     int             mouse_pressed;
+	int 		   	projection;
 }				t_fdf;
 
 
@@ -144,5 +145,9 @@ void move_up(t_map *map, float distance);
 void move_down(t_map *map, float distance);
 void move_left(t_map *map, float distance);
 void move_right(t_map *map, float distance);
+
+//PROJECTIONS
+void parallel_projection(t_map *s_map, float **map_matrix, int x);
+void isometric_projection(t_map *s_map, float **map_matrix, int x);
 
 #endif

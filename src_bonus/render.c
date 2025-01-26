@@ -12,22 +12,20 @@
 
 #include "../includes/fdf_bonus.h"
 
-static float	**get_map_matrix(t_map *s_map)
+static float	**get_map_matrix(t_map *s_map, int projection)
 {
 	float	**map_matrix;
 	int		x;
-	int		y;
 
-	y = 0;
 	x = 0;
 	map_matrix = (float **)malloc(sizeof(float *) * (s_map->height * s_map->width + 2));
 	while (s_map != NULL)
 	{
-		y = 0;
 		map_matrix[x] = malloc(sizeof(float) * 2);
-		map_matrix[x][y] = (s_map->s_references->x - s_map->s_references->y) * cos(COS_30);
-		y++;
-		map_matrix[x][y] = (s_map->s_references->x + s_map->s_references->y) * sin(SIN_30) - 0.15 * s_map->s_references->z;
+		if (projection == 0)
+			isometric_projection(s_map, map_matrix, x);
+		else
+			parallel_projection(s_map, map_matrix, x);
 		x++;
 		s_map = s_map->next;
 	}
@@ -73,7 +71,7 @@ void	render(t_fdf *fdf)
 	float	**converted_matrix;
 
 	background(fdf->img);
-	map_matrix = get_map_matrix(fdf->s_map);
+	map_matrix = get_map_matrix(fdf->s_map, fdf->projection);
 	converted_matrix = convert_matrix(fdf->s_map, map_matrix);
 	draw_map(fdf->s_map, fdf->img, converted_matrix, fdf->color);
 	return ;

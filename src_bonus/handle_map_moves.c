@@ -44,6 +44,11 @@ void handle_other_keys(mlx_key_data_t keydata, t_fdf *fdf)
     {
         mlx_close_window(fdf->mlx);
     }
+    else if (keydata.key == MLX_KEY_P && keydata.action == MLX_PRESS)
+    {
+        fdf->projection = (fdf->projection + 1) % 2;
+        render(fdf);
+    }
 }
 
 void rotate_keys(mlx_key_data_t keydata, t_fdf *fdf)
