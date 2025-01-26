@@ -1,6 +1,7 @@
 #============================FLAGS============================#
 
 NAME = fdf
+BONUS_NAME = fdf_bonus
 CC = cc
 CC_FLAGS = -Wall -Werror -Wextra -g3
 MAKE_NO_PRINT = $(MAKE) --no-print-directory
@@ -8,6 +9,7 @@ MAKE_NO_PRINT = $(MAKE) --no-print-directory
 #============================PATHS============================#
 
 SRCS_PATH = ./src
+BONUS_PATH = ./src_bonus
 LIBFT_PATH = ./libs/libft_plus
 LIB_MLX_PATH = ./libs/MLX42
 HEADERS_PATH = ./includes
@@ -26,8 +28,11 @@ MLX_FLAGS	=	-ldl -lglfw -pthread -lm
 #============================FILES============================#
 
 SRCS = $(wildcard $(SRCS_PATH)/*.c)
+SRCS_BONUS = $(wildcard $(BONUS_PATH)/*.c)
 OBJS = $(SRCS:.c=.o)
+OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 HEADERS = $(HEADERS_PATH)/fdf.h
+HEADERS_BONUS = $(HEADERS_PATH)/fdf_bonus.h
 
 #============================COLORS============================#
 
@@ -62,6 +67,20 @@ $(NAME): $(OBJS)
 	$(CC) $(OBJS) $(CC_FLAGS) $(LIBFT) $(MLX) $(MLX_FLAGS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) Build complete!$(RESET)"
 
+#============================BONUS============================#
+
+bonus: libft mlx $(BONUS_NAME)
+	@echo "$(GREEN)All files are up to date!$(RESET)"
+
+$(BONUS_PATH)/%.o: $(BONUS_PATH)/%.c $(HEADERS_BONUS)
+	@echo "$(CYAN)Compiling $<...$(RESET)"
+	$(CC) $(CC_FLAGS) $(INCLUDES) -c $< -o $@
+
+$(BONUS_NAME): $(OBJS_BONUS)
+	@echo "$(GREEN)Linking $(BONUS_NAME)...$(RESET)"
+	$(CC) $(OBJS_BONUS) $(CC_FLAGS) $(LIBFT) $(MLX) $(MLX_FLAGS) -o $(BONUS_NAME)
+	@echo "$(GREEN)$(BONUS_NAME) Build complete!$(RESET)"
+
 #============================LEAKS============================#
 
 #FILE VARIABLE
@@ -78,15 +97,17 @@ leak: all
 
 clean:
 	@echo "$(MAGENTA)Cleaning up...$(RESET)"
-	@rm -rf $(OBJS)
+	@rm -rf $(OBJS) $(OBJS_BONUS)
 	@rm -rf $(LIB_MLX_PATH)/build
 	@make -C $(LIBFT_PATH) clean
 
 fclean: clean
 	@echo "$(MAGENTA)Full clean...$(RESET)"
-	@rm -rf $(NAME)
+	@rm -rf $(NAME) $(BONUS_NAME)
 	@make -C $(LIBFT_PATH) fclean
 
 re: fclean all
+
+rebonus: fclean bonus
 
 .PHONY: all libft mlx clean fclean re
