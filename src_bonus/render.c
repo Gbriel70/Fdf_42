@@ -74,5 +74,6 @@ void	render(t_fdf *fdf)
 	map_matrix = get_map_matrix(fdf->s_map, fdf->projection);
 	converted_matrix = convert_matrix(fdf->s_map, map_matrix);
 	draw_map(fdf->s_map, fdf->img, converted_matrix, fdf->color);
+	draw_comands(fdf->mlx);
 	return ;
 }
