@@ -73,18 +73,9 @@ void rotate_keys(mlx_key_data_t keydata, t_fdf *fdf)
 void rgb_keys(mlx_key_data_t keydata, t_fdf *fdf)
 {
 	if (keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
-	{
-		fdf->color = 0xFF0000FF;
 		render(fdf);
-	}
 	else if (keydata.key == MLX_KEY_G && keydata.action == MLX_PRESS)
-	{
-		fdf->color = 0xFF0FFFFF;
 		render(fdf);
-	}
 	else if (keydata.key == MLX_KEY_B && keydata.action == MLX_PRESS)
-	{
-		fdf->color = 0xFFFFFFFF;
 		render(fdf);
-	}
 }

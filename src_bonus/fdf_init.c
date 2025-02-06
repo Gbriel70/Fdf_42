@@ -4,10 +4,7 @@ void	init_fdf(t_fdf **fdf, char *map_name)
 {
 	*fdf = malloc(sizeof(t_fdf));
 	if (!(*fdf))
-	{
-		print_return("Malloc failed", 1);
 		return ;
-	}
 	if (!create_map(*fdf, map_name))
 	{
 		*fdf = NULL;
@@ -78,7 +75,6 @@ int create_img(t_fdf *fdf)
 
 void set_others(t_fdf *fdf)
 {
-	fdf->color = DRAWING_COLOR;
 	fdf->mouse_x = 0;
 	fdf->mouse_y = 0;
 	fdf->mouse_pressed = 0;

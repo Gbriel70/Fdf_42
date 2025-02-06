@@ -31,24 +31,19 @@ void	background(mlx_image_t *img)
 	}
 }
 
-t_data_draw_line	*new_line_data(mlx_image_t *img, float **converted_matrix, int start, int end)
+t_data_draw_line *new_line_data(mlx_image_t *img, t_point start, t_point end)
 {
-	t_data_draw_line	*line_data;
+    t_data_draw_line *line;
 
-	line_data = (t_data_draw_line *)malloc(sizeof(t_data_draw_line));
-	line_data->img = img;
-	line_data->dx = ft_abs(converted_matrix[end][0] - converted_matrix[start][0]);
-	line_data->dy = ft_abs(converted_matrix[end][1] - converted_matrix[start][1]);
-	line_data->control = 0;
-	if (converted_matrix[end][0] > converted_matrix[start][0])
-		line_data->inc_x = 1;
-	else
-		line_data->inc_x = -1;
-	if (converted_matrix[end][1] > converted_matrix[start][1])
-		line_data->inc_y = 1;
-	else
-		line_data->inc_y = -1;
-	return (line_data);
+    line = (t_data_draw_line *)malloc(sizeof(t_data_draw_line));
+    if (!line)
+        return (NULL);
+    line->dx = abs((int)(end.x - start.x));
+    line->dy = abs((int)(end.y - start.y));
+    line->inc_x = (start.x < end.x) ? 1 : -1;
+    line->inc_y = (start.y < end.y) ? 1 : -1;
+    line->img = img;
+    return (line);
 }
 
 void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void *param)

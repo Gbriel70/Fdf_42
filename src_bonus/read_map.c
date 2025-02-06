@@ -12,6 +12,30 @@
 
 #include "../includes/fdf_bonus.h"
 
+int parse_color(char *token)
+{
+	char *comma;
+
+	comma = ft_strchr(token, ',');
+	if (comma)
+		return ((int)strtol(comma + 1, NULL, 16));
+	return (0xFFFFFF);
+}
+
+int parse_height(char *token)
+{
+	char *comma;
+	int height;
+
+	comma = ft_strchr(token, ',');
+	if(comma)
+		*comma = '\0';
+	height = ft_atoi(token);
+	if (comma)
+		*comma = ',';
+	return (height);
+}
+
 static t_map	*insert_node(t_map *head, t_map *s_list)
 {
 	t_map	*current;
@@ -34,7 +58,7 @@ static t_map	*insert_node(t_map *head, t_map *s_list)
 	return (head);
 }
 
-static t_map	*new_node(int x, int y, int z)
+static t_map	*new_node(int x, int y, int z, int color)
 {
 	t_map	*new;
 
@@ -43,13 +67,11 @@ static t_map	*new_node(int x, int y, int z)
 		print_return("In function new_node Malloc failed", 0);
 	new->s_references = (t_references *)malloc(sizeof(t_references));
 	if (!new->s_references)
-	{
 		free(new);
-		print_return("In function new_node Malloc failed", 0);
-	}
 	new->s_references->x = x;
 	new->s_references->y = y;
 	new->s_references->z = z;
+	new->s_references->color = color;
 	new->next = NULL;
 	return (new);
 }
@@ -57,21 +79,21 @@ static t_map	*new_node(int x, int y, int z)
 static t_map	*new_list(char *line, int y)
 {
 	int		x;
+	int		z;
+	int 	color;
 	char	**split_result;
 	t_map	*s_list;
 
-	x = 0;
+	x = -1;
 	s_list = NULL;
 	split_result = ft_split(line, ' ');
 	if (!split_result)
-	{
 		free_split(split_result);
-		print_return("In function new_list split failed", 0);
-	}
-	while (split_result[x])
+	while (split_result[++x])
 	{
-		s_list = insert_node(s_list, new_node(x, y, ft_atoi(split_result[x])));
-		x++;
+		color = parse_color(split_result[x]);
+		z = parse_height(split_result[x]);
+		s_list = insert_node(s_list, new_node(x, y, z, color));
 	}
 	s_list->width = x;
 	free_split(split_result);

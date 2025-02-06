@@ -56,9 +56,12 @@ int	ft_abs(int n)
 	return (n);
 }
 
-void	put_pixel(mlx_image_t *img, int start, int end, int color)
+void put_pixel(mlx_image_t *img, int x, int y, int color)
 {
-	if (start <= 0 || end <= 0 || start >= SCREEN_WIDTH || end >= SCREEN_HEIGHT)
-		return ;
-	mlx_put_pixel(img, start, end, color);
+    if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT)
+    {
+        // Supondo que a cor esteja no formato 0xRRGGBB, converta para 0xRRGGBBAA
+        int rgba_color = (color << 8) | 0xFF; // Adiciona o canal Alpha (0xFF)
+        mlx_put_pixel(img, x, y, rgba_color);
+    }
 }

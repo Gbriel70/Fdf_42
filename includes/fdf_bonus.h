@@ -28,6 +28,7 @@ typedef struct s_references
 	float			x;
 	float			y;
 	float			z;
+	int 			color;
 }					t_references;
 
 typedef struct s_map
@@ -74,13 +75,18 @@ typedef struct s_fdf
 	t_map			*s_map;
 	mlx_t			*mlx;
 	mlx_image_t		*img;
-    int             color;
     int             mouse_x;
     int             mouse_y;
     int             mouse_pressed;
 	int 		   	projection;
 }				t_fdf;
 
+typedef struct s_point
+{
+	float	x;
+	float	y;
+	int 	color;
+}				t_point;
 
 // FDF INITS
 void init_fdf(t_fdf **fdf, char *map_name);
@@ -109,7 +115,7 @@ float **scale_dimension_matrix(t_map *s_map, float **map_matrix, t_matrix_dimens
 
 // SETS UTILS
 void background(mlx_image_t *img);
-t_data_draw_line *new_line_data(mlx_image_t *img, float **converted_matrix, int start, int end);
+t_data_draw_line *new_line_data(mlx_image_t *img, t_point start, t_point end);
 void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void *param);
 void scroll_hook(double x_delta, double y_delta, void *param);
 void cursor_hook(double xpos, double ypos, void *param);
@@ -122,7 +128,7 @@ int	ft_abs(int n);
 void put_pixel(mlx_image_t *img, int start, int end, int color);
 
 // DRAW LINE
-void draw_line(mlx_image_t *img, float **converted_matrix, int start, int end, int color);
+void draw_line(mlx_image_t *img, t_point start, t_point end);
 
 // HANDLE MAP MOVES
 void handle_movement_keys(mlx_key_data_t keydata, t_fdf *fdf);
@@ -147,8 +153,8 @@ void move_left(t_map *map, float distance);
 void move_right(t_map *map, float distance);
 
 //PROJECTIONS
-void parallel_projection(t_map *s_map, float **map_matrix, int x);
-void isometric_projection(t_map *s_map, float **map_matrix, int x);
+void parallel_projection(t_map *s_map, t_point *point);
+void isometric_projection(t_map *s_map, t_point *point);
 
 //DRAW COMMANDS
 void draw_comands(mlx_t *mlx);
