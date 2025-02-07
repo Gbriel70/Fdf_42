@@ -18,7 +18,7 @@ int parse_color(char *token)
 
 	comma = ft_strchr(token, ',');
 	if (comma)
-		return ((int)strtol(comma + 1, NULL, 16));
+		return (ft_atoi_base(comma + 1, 16));
 	return (0xFFFFFF);
 }
 
