@@ -12,89 +12,166 @@
 
 #include "../includes/fdf_bonus.h"
 
-void draw_vertical_line(t_data_draw_line *line, t_point start, t_point end)
+static void put_pixel_with_intensity(mlx_image_t *img, int x, int y, float intensity, int color)
 {
-    int y = (int)start.y;
-    while (y != (int)end.y)
+    float min_intensity = 0.6; // Valor mínimo de intensidade para evitar cores muito escuras
+    intensity = intensity * (1 - min_intensity) + min_intensity;
+
+    int r = ((color >> 16) & 0xFF) * intensity;
+    int g = ((color >> 8) & 0xFF) * intensity;
+    int b = (color & 0xFF) * intensity;
+    int new_color = (r << 16) | (g << 8) | b;
+    put_pixel(img, x, y, new_color);
+}
+
+static void draw_vertical_line_xiaolin_wu(mlx_image_t *img, t_point start, t_point end)
+{
+    if (start.y > end.y)
     {
-        put_pixel(line->img, (int)start.x, y, start.color);
-        y += line->inc_y;
+        t_point temp = start;
+        start = end;
+        end = temp;
+    }
+
+    float gradient = (end.x - start.x) / (end.y - start.y);
+    float xend = round(start.y);
+    float yend = start.x + gradient * (xend - start.y);
+    float xgap = 1 - (start.y + 0.5 - floor(start.y + 0.5));
+    int xpxl1 = xend;
+    int ypxl1 = floor(yend);
+    put_pixel_with_intensity(img, ypxl1, xpxl1, (1 - (yend - ypxl1)) * xgap, start.color);
+    put_pixel_with_intensity(img, ypxl1 + 1, xpxl1, (yend - ypxl1) * xgap, start.color);
+    float intery = yend + gradient;
+
+    xend = round(end.y);
+    yend = end.x + gradient * (xend - end.y);
+    xgap = end.y + 0.5 - floor(end.y + 0.5);
+    int xpxl2 = xend;
+    int ypxl2 = floor(yend);
+    put_pixel_with_intensity(img, ypxl2, xpxl2, (1 - (yend - ypxl2)) * xgap, end.color);
+    put_pixel_with_intensity(img, ypxl2 + 1, xpxl2, (yend - ypxl2) * xgap, end.color);
+
+    for (int x = xpxl1 + 1; x < xpxl2; x++)
+    {
+        put_pixel_with_intensity(img, floor(intery), x, 1 - (intery - floor(intery)), start.color);
+        put_pixel_with_intensity(img, floor(intery) + 1, x, intery - floor(intery), start.color);
+        intery += gradient;
     }
 }
 
-void draw_horizontal_line(t_data_draw_line *line, t_point start, t_point end)
+static void draw_horizontal_line_xiaolin_wu(mlx_image_t *img, t_point start, t_point end)
 {
-    int x = (int)start.x;
-    while (x != (int)end.x)
+    if (start.x > end.x)
     {
-        put_pixel(line->img, x, (int)start.y, start.color);
-        x += line->inc_x;
+        t_point temp = start;
+        start = end;
+        end = temp;
+    }
+
+    float gradient = (end.y - start.y) / (end.x - start.x);
+    float xend = round(start.x);
+    float yend = start.y + gradient * (xend - start.x);
+    float xgap = 1 - (start.x + 0.5 - floor(start.x + 0.5));
+    int xpxl1 = xend;
+    int ypxl1 = floor(yend);
+    put_pixel_with_intensity(img, xpxl1, ypxl1, (1 - (yend - ypxl1)) * xgap, start.color);
+    put_pixel_with_intensity(img, xpxl1, ypxl1 + 1, (yend - ypxl1) * xgap, start.color);
+    float intery = yend + gradient;
+
+    xend = round(end.x);
+    yend = end.y + gradient * (xend - end.x);
+    xgap = end.x + 0.5 - floor(end.x + 0.5);
+    int xpxl2 = xend;
+    int ypxl2 = floor(yend);
+    put_pixel_with_intensity(img, xpxl2, ypxl2, (1 - (yend - ypxl2)) * xgap, end.color);
+    put_pixel_with_intensity(img, xpxl2, ypxl2 + 1, (yend - ypxl2) * xgap, end.color);
+
+    for (int x = xpxl1 + 1; x < xpxl2; x++)
+    {
+        put_pixel_with_intensity(img, x, floor(intery), 1 - (intery - floor(intery)), start.color);
+        put_pixel_with_intensity(img, x, floor(intery) + 1, intery - floor(intery), start.color);
+        intery += gradient;
     }
 }
 
-void draw_line_larger_x_axis(t_data_draw_line *line, t_point start, t_point end)
+static void draw_diagonal_line_xiaolin_wu(mlx_image_t *img, t_point start, t_point end)
 {
-    int x = (int)start.x;
-    int y = (int)start.y;
-    int d = 2 * line->dy - line->dx;
-    int d1 = 2 * line->dy;
-    int d2 = 2 * (line->dy - line->dx);
-
-    while (x != (int)end.x)
+    if (ft_abs(end.y - start.y) > ft_abs(end.x - start.x))
     {
-        put_pixel(line->img, x, y, start.color);
-        if (d > 0)
+        if (start.y > end.y)
         {
-            y += line->inc_y;
-            d += d2;
+            t_point temp = start;
+            start = end;
+            end = temp;
         }
-        else
+
+        float gradient = (end.x - start.x) / (end.y - start.y);
+        float xend = round(start.y);
+        float yend = start.x + gradient * (xend - start.y);
+        float xgap = 1 - (start.y + 0.5 - floor(start.y + 0.5));
+        int xpxl1 = xend;
+        int ypxl1 = floor(yend);
+        put_pixel_with_intensity(img, ypxl1, xpxl1, (1 - (yend - ypxl1)) * xgap, start.color);
+        put_pixel_with_intensity(img, ypxl1 + 1, xpxl1, (yend - ypxl1) * xgap, start.color);
+        float intery = yend + gradient;
+
+        xend = round(end.y);
+        yend = end.x + gradient * (xend - end.y);
+        xgap = end.y + 0.5 - floor(end.y + 0.5);
+        int xpxl2 = xend;
+        int ypxl2 = floor(yend);
+        put_pixel_with_intensity(img, ypxl2, xpxl2, (1 - (yend - ypxl2)) * xgap, end.color);
+        put_pixel_with_intensity(img, ypxl2 + 1, xpxl2, (yend - ypxl2) * xgap, end.color);
+
+        for (int x = xpxl1 + 1; x < xpxl2; x++)
         {
-            d += d1;
+            put_pixel_with_intensity(img, floor(intery), x, 1 - (intery - floor(intery)), start.color);
+            put_pixel_with_intensity(img, floor(intery) + 1, x, intery - floor(intery), start.color);
+            intery += gradient;
         }
-        x += line->inc_x;
     }
-}
-
-void draw_line_larger_y_axis(t_data_draw_line *line, t_point start, t_point end)
-{
-    int x = (int)start.x;
-    int y = (int)start.y;
-    int d = 2 * line->dx - line->dy;
-    int d1 = 2 * line->dx;
-    int d2 = 2 * (line->dx - line->dy);
-
-    while (y != (int)end.y)
+    else
     {
-        put_pixel(line->img, x, y, start.color);
-        if (d > 0)
+        if (start.x > end.x)
         {
-            x += line->inc_x;
-            d += d2;
+            t_point temp = start;
+            start = end;
+            end = temp;
         }
-        else
+
+        float gradient = (end.y - start.y) / (end.x - start.x);
+        float xend = round(start.x);
+        float yend = start.y + gradient * (xend - start.x);
+        float xgap = 1 - (start.x + 0.5 - floor(start.x + 0.5));
+        int xpxl1 = xend;
+        int ypxl1 = floor(yend);
+        put_pixel_with_intensity(img, xpxl1, ypxl1, (1 - (yend - ypxl1)) * xgap, start.color);
+        put_pixel_with_intensity(img, xpxl1, ypxl1 + 1, (yend - ypxl1) * xgap, start.color);
+        float intery = yend + gradient;
+
+        xend = round(end.x);
+        yend = end.y + gradient * (xend - end.x);
+        xgap = end.x + 0.5 - floor(end.x + 0.5);
+        int xpxl2 = xend;
+        int ypxl2 = floor(yend);
+        put_pixel_with_intensity(img, xpxl2, ypxl2, (1 - (yend - ypxl2)) * xgap, end.color);
+        put_pixel_with_intensity(img, xpxl2, ypxl2 + 1, (yend - ypxl2) * xgap, end.color);
+
+        for (int x = xpxl1 + 1; x < xpxl2; x++)
         {
-            d += d1;
+            put_pixel_with_intensity(img, x, floor(intery), 1 - (intery - floor(intery)), start.color);
+            put_pixel_with_intensity(img, x, floor(intery) + 1, intery - floor(intery), start.color);
+            intery += gradient;
         }
-        y += line->inc_y;
     }
 }
 
 void draw_line(mlx_image_t *img, t_point start, t_point end)
 {
-    t_data_draw_line *line;
-
-    line = new_line_data(img, start, end);
-    if (line->dx == 0)
-        draw_vertical_line(line, start, end);
-    else if (line->dy == 0)
-        draw_horizontal_line(line, start, end);
+    if (start.x == end.x)
+        draw_vertical_line_xiaolin_wu(img, start, end);
+    else if (start.y == end.y)
+        draw_horizontal_line_xiaolin_wu(img, start, end);
     else
-    {
-        if (line->dx >= line->dy)
-            draw_line_larger_x_axis(line, start, end);
-        else
-            draw_line_larger_y_axis(line, start, end);
-    }
-    free(line);
+        draw_diagonal_line_xiaolin_wu(img, start, end);
 }

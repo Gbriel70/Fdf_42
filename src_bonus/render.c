@@ -12,104 +12,78 @@
 
 #include "../includes/fdf_bonus.h"
 
-#include "../includes/fdf_bonus.h"
-
-static t_point **convert_to_matrix(t_map *s_map, int projection)
+static float	**get_map_matrix(t_map *s_map, int projection)
 {
-    t_point **matrix;
-    t_map *current;
-    int i, j;
-    float offset_x, offset_y;
+    float	**map_matrix;
+    int		x;
 
-    matrix = (t_point **)malloc(sizeof(t_point *) * s_map->height);
-    if (!matrix)
+    x = 0;
+    map_matrix = (float **)malloc(sizeof(float *) * (s_map->height * s_map->width + 2));
+    if (!map_matrix)
         return (NULL);
-    i = 0;
-    while (i < s_map->height)
+    while (s_map)
     {
-        matrix[i] = (t_point *)malloc(sizeof(t_point) * s_map->width);
-        if (!matrix[i])
-            return (NULL);
-        i++;
+        map_matrix[x] = malloc(sizeof(float) * 2);
+        if (!map_matrix[x])
+            clean_matrix(map_matrix);
+        if (projection == 0)
+            isometric_projection(s_map, map_matrix, x);
+        else
+            parallel_projection(s_map, map_matrix, x);
+        x++;
+        s_map = s_map->next;
     }
-
-    current = s_map;
-    i = 0;
-    while (i < s_map->height)
-    {
-        j = 0;
-        while (j < s_map->width)
-        {
-            if (projection == 0)
-                isometric_projection(current, &matrix[i][j]);
-            else
-                parallel_projection(current, &matrix[i][j]);
-            current = current->next;
-            j++;
-        }
-        i++;
-    }
-
-    // Calcular o offset para centralizar o mapa
-    offset_x = (SCREEN_WIDTH - (matrix[s_map->height - 1][s_map->width - 1].x - matrix[0][0].x)) / 2;
-    offset_y = (SCREEN_HEIGHT - (matrix[s_map->height - 1][s_map->width - 1].y - matrix[0][0].y)) / 2;
-
-    // Aplicar o offset
-    i = 0;
-    while (i < s_map->height)
-    {
-        j = 0;
-        while (j < s_map->width)
-        {
-            matrix[i][j].x += offset_x;
-            matrix[i][j].y += offset_y;
-            j++;
-        }
-        i++;
-    }
-
-    return (matrix);
+    map_matrix[x] = NULL;
+    return (map_matrix);
 }
 
-void draw_map(mlx_image_t *img, t_point **matrix, int width, int height)
+static float	**convert_matrix(t_map *s_map, float **map_matrix)
 {
-    int i, j;
+    float				**converted_matrix;
+    t_matrix_dimensions	*s_matrix_dimensions;
 
-    i = 0;
-    while (i < height)
-    {
-        j = 0;
-        while (j < width)
-        {
-            put_pixel(img, (int)matrix[i][j].x, (int)matrix[i][j].y, matrix[i][j].color);
-            if (j < width - 1)
-                draw_line(img, matrix[i][j], matrix[i][j + 1]);
-            if (i < height - 1)
-                draw_line(img, matrix[i][j], matrix[i + 1][j]);
-            j++;
-        }
-        i++;
-    }
+    s_matrix_dimensions = get_matrix_dimensions(map_matrix, s_map);
+    get_map_scale(s_map);
+    converted_matrix = scale_dimension_matrix(s_map, map_matrix, s_matrix_dimensions);
+    return (converted_matrix);
 }
 
-void render(t_fdf *fdf)
+static void	draw_map(t_map *s_map, mlx_image_t *img, float **converted_matrix)
 {
-    t_point **matrix;
+    int	x;
+    int	width;
+    int	height;
+
+    x = 0;
+    width = s_map->width;
+    height = s_map->height;
+    while (s_map)
+    {
+        t_point start = {converted_matrix[x][0], converted_matrix[x][1], s_map->s_references->color};
+        if ((x + 1) % width != 0)
+        {
+            t_point end = {converted_matrix[x + 1][0], converted_matrix[x + 1][1], s_map->s_references->color};
+            draw_line(img, start, end);
+        }
+        if (x < (height - 1) * width)
+        {
+            t_point end = {converted_matrix[x + width][0], converted_matrix[x + width][1], s_map->s_references->color};
+            draw_line(img, start, end);
+        }
+        x++;
+        s_map = s_map->next;
+    }
+    clean_matrix(converted_matrix);
+}
+
+void	render(t_fdf *fdf)
+{
+    float	**map_matrix;
+    float	**converted_matrix;
 
     background(fdf->img);
-    matrix = convert_to_matrix(fdf->s_map, fdf->projection);
-    if (!matrix)
-        return;
-
-    draw_map(fdf->img, matrix, fdf->s_map->width, fdf->s_map->height);
+    map_matrix = get_map_matrix(fdf->s_map, fdf->projection);
+    converted_matrix = convert_matrix(fdf->s_map, map_matrix);
+    draw_map(fdf->s_map, fdf->img, converted_matrix);
     draw_comands(fdf->mlx);
-
-    // Libere a memória da matriz após o uso
-    int i = 0;
-    while (i < fdf->s_map->height)
-    {
-        free(matrix[i]);
-        i++;
-    }
-    free(matrix);
 }

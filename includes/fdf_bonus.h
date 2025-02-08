@@ -153,8 +153,8 @@ void move_left(t_map *map, float distance);
 void move_right(t_map *map, float distance);
 
 //PROJECTIONS
-void parallel_projection(t_map *s_map, t_point *point);
-void isometric_projection(t_map *s_map, t_point *point);
+void parallel_projection(t_map *s_map, float **map_matrix, int x);
+void isometric_projection(t_map *s_map, float **map_matrix, int x);
 
 //DRAW COMMANDS
 void draw_comands(mlx_t *mlx);
