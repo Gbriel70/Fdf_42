@@ -44,9 +44,19 @@ void handle_other_keys(mlx_key_data_t keydata, t_fdf *fdf)
     {
         mlx_close_window(fdf->mlx);
     }
-    else if (keydata.key == MLX_KEY_P && keydata.action == MLX_PRESS)
+    else if (keydata.key == MLX_KEY_1 && keydata.action == MLX_PRESS)
     {
-        fdf->projection = (fdf->projection + 1) % 2;
+        fdf->projection = 1;
+        render(fdf);
+    }
+    else if (keydata.key == MLX_KEY_2 && keydata.action == MLX_PRESS)
+    {
+        fdf->projection = 2;
+        render(fdf);
+    }
+    else if (keydata.key == MLX_KEY_3 && keydata.action == MLX_PRESS)
+    {
+        fdf->projection = 0;
         render(fdf);
     }
 }
@@ -68,14 +78,4 @@ void rotate_keys(mlx_key_data_t keydata, t_fdf *fdf)
 		rotate_z(fdf->s_map, M_PI / 18);
 		render(fdf);
 	}
-}
-
-void rgb_keys(mlx_key_data_t keydata, t_fdf *fdf)
-{
-	if (keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
-		render(fdf);
-	else if (keydata.key == MLX_KEY_G && keydata.action == MLX_PRESS)
-		render(fdf);
-	else if (keydata.key == MLX_KEY_B && keydata.action == MLX_PRESS)
-		render(fdf);
 }

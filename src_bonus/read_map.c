@@ -19,7 +19,7 @@ int parse_color(char *token)
 	comma = ft_strchr(token, ',');
 	if (comma)
 		return (ft_atoi_base(comma + 1, 16));
-	return (0xFFFFFF);
+	return (0xFF00FF);
 }
 
 int parse_height(char *token)

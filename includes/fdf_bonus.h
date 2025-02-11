@@ -135,7 +135,6 @@ void handle_movement_keys(mlx_key_data_t keydata, t_fdf *fdf);
 void handle_zoom_keys(mlx_key_data_t keydata, t_fdf *fdf);
 void handle_other_keys(mlx_key_data_t keydata, t_fdf *fdf);
 void rotate_keys(mlx_key_data_t keydata, t_fdf *fdf);
-void rgb_keys(mlx_key_data_t keydata, t_fdf *fdf);
 
 // CAMERA ROTATES
 void rotate_x(t_map *map, float angle);
@@ -155,6 +154,13 @@ void move_right(t_map *map, float distance);
 //PROJECTIONS
 void parallel_projection(t_map *s_map, float **map_matrix, int x);
 void isometric_projection(t_map *s_map, float **map_matrix, int x);
+//void oblique_projection(t_map *s_map, float **map_matrix, int x);
+//void perspective_projection(t_map *s_map, float **map_matrix, int x);
+//void dimetric_projection(t_map *s_map, float **map_matrix, int x);
+//void spherical_projection(t_map *s_map, float **map_matrix, int x);
+//void cylindrical_projection(t_map *s_map, float **map_matrix, int x);
+void trimetric_projection(t_map *s_map, float **map_matrix, int x);
+
 
 //DRAW COMMANDS
 void draw_comands(mlx_t *mlx);

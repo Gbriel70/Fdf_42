@@ -28,8 +28,15 @@ static float	**get_map_matrix(t_map *s_map, int projection)
             clean_matrix(map_matrix);
         if (projection == 0)
             isometric_projection(s_map, map_matrix, x);
-        else
+        else if (projection == 1)
             parallel_projection(s_map, map_matrix, x);
+        else
+            //oblique_projection(s_map, map_matrix, x);
+            //perspective_projection(s_map, map_matrix, x);
+            //dimetric_projection(s_map, map_matrix, x);
+            //spherical_projection(s_map, map_matrix, x);
+            //cylindrical_projection(s_map, map_matrix, x);
+            trimetric_projection(s_map, map_matrix, x);
         x++;
         s_map = s_map->next;
     }

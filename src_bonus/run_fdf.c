@@ -20,8 +20,6 @@ static void	key_hook(mlx_key_data_t keydata, void *param)
 	handle_zoom_keys(keydata, fdf);
 	handle_other_keys(keydata, fdf);
 	rotate_keys(keydata, fdf);
-	rgb_keys(keydata, fdf);
-
 }
 
 static void	task_mlx(t_fdf *fdf)
