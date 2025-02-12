@@ -6,35 +6,11 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 09:22:40 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/01/24 09:26:29 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/12 11:12:56 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf_bonus.h"
-
-int parse_color(char *token)
-{
-	char *comma;
-
-	comma = ft_strchr(token, ',');
-	if (comma)
-		return (ft_atoi_base(comma + 1, 16));
-	return (0xFF00FF);
-}
-
-int parse_height(char *token)
-{
-	char *comma;
-	int height;
-
-	comma = ft_strchr(token, ',');
-	if(comma)
-		*comma = '\0';
-	height = ft_atoi(token);
-	if (comma)
-		*comma = ',';
-	return (height);
-}
 
 static t_map	*insert_node(t_map *head, t_map *s_list)
 {
@@ -80,7 +56,7 @@ static t_map	*new_list(char *line, int y)
 {
 	int		x;
 	int		z;
-	int 	color;
+	int		color;
 	char	**split_result;
 	t_map	*s_list;
 

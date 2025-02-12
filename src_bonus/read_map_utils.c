@@ -1,23 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_comands.c                                     :+:      :+:    :+:   */
+/*   read_map_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/12 11:13:29 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/12 11:13:30 by gcosta-m         ###   ########.fr       */
+/*   Created: 2025/02/12 11:12:04 by gcosta-m          #+#    #+#             */
+/*   Updated: 2025/02/12 11:13:13 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf_bonus.h"
 
-void	draw_comands(mlx_t *mlx)
+int	parse_color(char *token)
 {
-	mlx_put_string(mlx, "FDF COMMANDS!!", 10, 10);
-	mlx_put_string(mlx, "Move: UP, DOWN, LEFT, RIGHT", 10, 30);
-	mlx_put_string(mlx, "Zoom: Z, X", 10, 50);
-	mlx_put_string(mlx, "Projection: P", 10, 70);
-	mlx_put_string(mlx, "Exit: ESC", 10, 90);
-	mlx_put_string(mlx, "Rotates: A, S, D", 10, 110);
+	char	*comma;
+
+	comma = ft_strchr(token, ',');
+	if (comma)
+		return (ft_atoi_base(comma + 1, 16));
+	return (0xFF00FF);
+}
+
+int	parse_height(char *token)
+{
+	char	*comma;
+	int		height;
+
+	comma = ft_strchr(token, ',');
+	if (comma)
+		*comma = '\0';
+	height = ft_atoi(token);
+	if (comma)
+		*comma = ',';
+	return (height);
 }

@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 09:24:01 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/01/24 09:24:07 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/12 11:15:09 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,13 @@ int	ft_abs(int n)
 	return (n);
 }
 
-void put_pixel(mlx_image_t *img, int x, int y, int color)
+void	put_pixel(mlx_image_t *img, int x, int y, int color)
 {
-    if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT)
-    {
-        // Supondo que a cor esteja no formato 0xRRGGBB, converta para 0xRRGGBBAA
-        int rgba_color = (color << 8) | 0xFF; // Adiciona o canal Alpha (0xFF)
-        mlx_put_pixel(img, x, y, rgba_color);
-    }
+	int	rgba_color;
+
+	if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT)
+	{
+		rgba_color = (color << 8) | 0xFF;
+		mlx_put_pixel(img, x, y, rgba_color);
+	}
 }

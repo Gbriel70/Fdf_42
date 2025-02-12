@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 09:23:38 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/01/24 09:23:40 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/12 11:34:20 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,6 @@ static float	**get_map_matrix(t_map *s_map, int projection)
         else if (projection == 1)
             parallel_projection(s_map, map_matrix, x);
         else
-            //oblique_projection(s_map, map_matrix, x);
-            //perspective_projection(s_map, map_matrix, x);
-            //dimetric_projection(s_map, map_matrix, x);
-            //spherical_projection(s_map, map_matrix, x);
-            //cylindrical_projection(s_map, map_matrix, x);
             trimetric_projection(s_map, map_matrix, x);
         x++;
         s_map = s_map->next;
@@ -55,7 +50,7 @@ static float	**convert_matrix(t_map *s_map, float **map_matrix)
     return (converted_matrix);
 }
 
-static void	draw_map(t_map *s_map, mlx_image_t *img, float **converted_matrix)
+static void	draw_map(t_map *s_map, mlx_image_t *img, float **cntd_m)
 {
     int	x;
     int	width;
@@ -66,21 +61,21 @@ static void	draw_map(t_map *s_map, mlx_image_t *img, float **converted_matrix)
     height = s_map->height;
     while (s_map)
     {
-        t_point start = {converted_matrix[x][0], converted_matrix[x][1], s_map->s_references->color};
+        t_point start = {cntd_m[x][0], cntd_m[x][1], s_map->s_references->color};
         if ((x + 1) % width != 0)
         {
-            t_point end = {converted_matrix[x + 1][0], converted_matrix[x + 1][1], s_map->s_references->color};
+            t_point end = {cntd_m[x + 1][0], cntd_m[x + 1][1], s_map->s_references->color};
             draw_line(img, start, end);
         }
         if (x < (height - 1) * width)
         {
-            t_point end = {converted_matrix[x + width][0], converted_matrix[x + width][1], s_map->s_references->color};
+            t_point end = {cntd_m[x + width][0], cntd_m[x + width][1], s_map->s_references->color};
             draw_line(img, start, end);
         }
         x++;
         s_map = s_map->next;
     }
-    clean_matrix(converted_matrix);
+    clean_matrix(cntd_m);
 }
 
 void	render(t_fdf *fdf)

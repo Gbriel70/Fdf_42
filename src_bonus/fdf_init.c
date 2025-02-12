@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fdf_init.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/12 11:20:11 by gcosta-m          #+#    #+#             */
+/*   Updated: 2025/02/12 11:20:13 by gcosta-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/fdf_bonus.h"
 
 void	init_fdf(t_fdf **fdf, char *map_name)
@@ -23,7 +35,7 @@ void	init_fdf(t_fdf **fdf, char *map_name)
 	set_others(*fdf);
 }
 
-int create_map(t_fdf *fdf, char *map_name)
+int	create_map(t_fdf *fdf, char *map_name)
 {
 	fdf->s_map = NULL;
 	fdf->s_map = read_map(map_name);
@@ -49,7 +61,7 @@ int	init_mlx(t_fdf *fdf)
 	return (1);
 }
 
-int create_img(t_fdf *fdf)
+int	create_img(t_fdf *fdf)
 {
 	fdf->img = mlx_new_image(fdf->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (!fdf->img)
@@ -73,10 +85,9 @@ int create_img(t_fdf *fdf)
 	return (1);
 }
 
-void set_others(t_fdf *fdf)
+void	set_others(t_fdf *fdf)
 {
 	fdf->mouse_x = 0;
 	fdf->mouse_y = 0;
 	fdf->mouse_pressed = 0;
 }
-

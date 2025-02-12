@@ -165,4 +165,8 @@ void trimetric_projection(t_map *s_map, float **map_matrix, int x);
 //DRAW COMMANDS
 void draw_comands(mlx_t *mlx);
 
+// READ MAP UTILS
+int	parse_color(char *token);
+int	parse_height(char *token);
+
 #endif
