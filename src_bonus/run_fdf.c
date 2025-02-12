@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 09:23:49 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/01/24 09:23:52 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/12 12:07:47 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 static void	key_hook(mlx_key_data_t keydata, void *param)
 {
-	t_fdf *fdf = (t_fdf *)param;
+	t_fdf	*fdf;
 
+	fdf = (t_fdf *)param;
 	handle_movement_keys(keydata, fdf);
 	handle_zoom_keys(keydata, fdf);
 	handle_other_keys(keydata, fdf);
