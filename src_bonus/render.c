@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 09:23:38 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/12 11:56:22 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/12 17:07:03 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ static float	**get_map_matrix(t_map *s_map, int projection)
 
 static float	**convert_matrix(t_map *s_map, float **map_matrix)
 {
-	float				**converted_matrix;
-	t_matrix_dimensions	*s_matrix_dimensions;
+	float				**converted_m;
+	t_matrix_dimensions	*s_m_dimensions;
 
-	s_matrix_dimensions = get_matrix_dimensions(map_matrix, s_map);
+	s_m_dimensions = get_matrix_dimensions(map_matrix, s_map);
 	get_map_scale(s_map);
-	converted_matrix = scale_dimension_matrix(s_map, map_matrix, s_matrix_dimensions);
-	return (converted_matrix);
+	converted_m = scale_dimension_matrix(s_map, map_matrix, s_m_dimensions);
+	return (converted_m);
 }
 
 static void	draw_map(t_map *s_map, mlx_image_t *img, float **cntd_m)
@@ -59,17 +59,19 @@ static void	draw_map(t_map *s_map, mlx_image_t *img, float **cntd_m)
 	x = 0;
 	width = s_map->width;
 	height = s_map->height;
+	t_point start;
+	t_point end;
 	while (s_map)
 	{
-		t_point start = {cntd_m[x][0], cntd_m[x][1], s_map->s_references->color};
+		start = (t_point){cntd_m[x][0], cntd_m[x][1], s_map->s_references->color};
 		if ((x + 1) % width != 0)
 		{
-			t_point end = {cntd_m[x + 1][0], cntd_m[x + 1][1], s_map->s_references->color};
+			end = (t_point){cntd_m[x + 1][0], cntd_m[x + 1][1], s_map->s_references->color};
 			draw_line(img, start, end);
 		}
 		if (x < (height - 1) * width)
 		{
-			t_point end = {cntd_m[x + width][0], cntd_m[x + width][1], s_map->s_references->color};
+			end = (t_point){cntd_m[x + width][0], cntd_m[x + width][1], s_map->s_references->color};
 			draw_line(img, start, end);
 		}
 		x++;
