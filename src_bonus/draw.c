@@ -30,7 +30,7 @@ void	ft_swap_float(float *a, float *b)
     *b = temp;
 }
 
-int ft_round(float num)
+int _round(float num)
 {
     if (num < 0)
         return (int)(num - 0.5);
@@ -38,7 +38,7 @@ int ft_round(float num)
         return (int)(num + 0.5);
 }
 
-int ft_floor(float num)
+int _floor(float num)
 {
     int int_num;
 
@@ -52,9 +52,9 @@ int ft_floor(float num)
 typedef struct s_draw_params
 {
     mlx_image_t *img;
-    t_point start;
+    t_point stt;
     t_point end;
-    float gradient;
+    float grad;
     int steep;
 } t_draw_params;
 
@@ -64,9 +64,9 @@ typedef struct s_pixel_params
     int y;
     float intensity;
     int color;
-} t_pixel_params;
+} t_px_p;
 
-static void	put_pixel_with_intensity(mlx_image_t *img, t_pixel_params *params)
+static void	put_px_intsit(mlx_image_t *img, t_px_p *params)
 {
     float	min_intensity;
     int		r;
@@ -87,22 +87,22 @@ static void	draw_endpoint(t_draw_params *params, t_point point, float yend,
     float xgap)
 {
     int	ypxl;
-    t_pixel_params pixel_params;
+    t_px_p px_p;
 
-    ypxl = ft_floor(yend);
+    ypxl = _floor(yend);
     if (params->steep)
     {
-        pixel_params = (t_pixel_params){ypxl, point.x, (1 - (yend - ypxl)) * xgap, point.color};
-        put_pixel_with_intensity(params->img, &pixel_params);
-        pixel_params = (t_pixel_params){ypxl + 1, point.x, (yend - ypxl) * xgap, point.color};
-        put_pixel_with_intensity(params->img, &pixel_params);
+        px_p = (t_px_p){ypxl, point.x, (1 - (yend - ypxl)) * xgap, point.c};
+        put_px_intsit(params->img, &px_p);
+        px_p = (t_px_p){ypxl + 1, point.x, (yend - ypxl) * xgap, point.c};
+        put_px_intsit(params->img, &px_p);
     }
     else
     {
-        pixel_params = (t_pixel_params){point.x, ypxl, (1 - (yend - ypxl)) * xgap, point.color};
-        put_pixel_with_intensity(params->img, &pixel_params);
-        pixel_params = (t_pixel_params){point.x, ypxl + 1, (yend - ypxl) * xgap, point.color};
-        put_pixel_with_intensity(params->img, &pixel_params);
+        px_p = (t_px_p){point.x, ypxl, (1 - (yend - ypxl)) * xgap, point.c};
+        put_px_intsit(params->img, &px_p);
+        px_p = (t_px_p){point.x, ypxl + 1, (yend - ypxl) * xgap, point.c};
+        put_px_intsit(params->img, &px_p);
     }
 }
 
@@ -112,40 +112,41 @@ static void	draw_endpoints(t_draw_params *params)
     float	yend;
     float	xgap;
 
-    xend = ft_round(params->start.x);
-    yend = params->start.y + params->gradient * (xend - params->start.x);
-    xgap = 1 - (params->start.x + 0.5 - ft_floor(params->start.x + 0.5));
-    draw_endpoint(params, (t_point){xend, params->start.y, params->start.color}, yend, xgap);
-    xend = ft_round(params->end.x);
-    yend = params->end.y + params->gradient * (xend - params->end.x);
-    xgap = params->end.x + 0.5 - ft_floor(params->end.x + 0.5);
-    draw_endpoint(params, (t_point){xend, params->end.y, params->end.color}, yend, xgap);
+    xend = _round(params->stt.x);
+    yend = params->stt.y + params->grad * (xend - params->stt.x);
+    xgap = 1 - (params->stt.x + 0.5 - _floor(params->stt.x + 0.5));
+    draw_endpoint(params, (t_point){xend, params->stt.y, params->stt.c}, yend, xgap);
+    xend = _round(params->end.x);
+    yend = params->end.y + params->grad * (xend - params->end.x);
+    xgap = params->end.x + 0.5 - _floor(params->end.x + 0.5);
+    draw_endpoint(params, (t_point){xend, params->end.y, params->end.c}, yend, xgap);
 }
 
-static void	draw_line_main(t_draw_params *params)
+static void	draw_line_main(t_draw_params *p)
 {
-    float	intery;
+    float	i;
     int		x;
+    t_px_p px_p;
 
-    intery = params->start.y + params->gradient * (ft_round(params->start.x) - params->start.x) + params->gradient;
-    x = ft_round(params->start.x) + 1;
-    while (x < ft_round(params->end.x))
+    i = p->stt.y + p->grad * (_round(p->stt.x) - p->stt.x) + p->grad;
+    x = _round(p->stt.x) + 1;
+    while (x < _round(p->end.x))
     {
-        if (params->steep)
+        if (p->steep)
         {
-            t_pixel_params pixel_params = {ft_floor(intery), x, 1 - (intery - ft_floor(intery)), params->start.color};
-            put_pixel_with_intensity(params->img, &pixel_params);
-            pixel_params = (t_pixel_params){ft_floor(intery) + 1, x, intery - ft_floor(intery), params->start.color};
-            put_pixel_with_intensity(params->img, &pixel_params);
+            px_p = (t_px_p){_floor(i), x, 1 - (i - _floor(i)), p->stt.c};
+            put_px_intsit(p->img, &px_p);
+            px_p = (t_px_p){_floor(i) + 1, x, i - _floor(i), p->stt.c};
+            put_px_intsit(p->img, &px_p);
         }
         else
         {
-            t_pixel_params pixel_params = {x, ft_floor(intery), 1 - (intery - ft_floor(intery)), params->start.color};
-            put_pixel_with_intensity(params->img, &pixel_params);
-            pixel_params = (t_pixel_params){x, ft_floor(intery) + 1, intery - ft_floor(intery), params->start.color};
-            put_pixel_with_intensity(params->img, &pixel_params);
+            px_p = (t_px_p){x, _floor(i), 1 - (i - _floor(i)), p->stt.c};
+            put_px_intsit(p->img, &px_p);
+            px_p = (t_px_p){x, _floor(i) + 1, i - _floor(i), p->stt.c};
+            put_px_intsit(p->img, &px_p);
         }
-        intery += params->gradient;
+        i += p->grad;
         x++;
     }
 }
@@ -170,9 +171,9 @@ static void	draw_line_xiaolin_wu(mlx_image_t *img, t_point start, t_point end)
     dy = end.y - start.y;
     gradient = dy / dx;
     params.img = img;
-    params.start = start;
+    params.stt = start;
     params.end = end;
-    params.gradient = gradient;
+    params.grad = gradient;
     params.steep = steep;
     draw_endpoints(&params);
     draw_line_main(&params);

@@ -50,34 +50,50 @@ static float	**convert_matrix(t_map *s_map, float **map_matrix)
 	return (converted_m);
 }
 
+static void	draw_horizontal_lines(mlx_image_t *img, t_map *s_map, float **cntd_m, int width)
+{
+    int x = 0;
+    t_point start, end;
+
+    while (s_map)
+    {
+        start = (t_point){cntd_m[x][0], cntd_m[x][1], s_map->s_references->color};
+        if ((x + 1) % width != 0)
+        {
+            end = (t_point){cntd_m[x + 1][0], cntd_m[x + 1][1], s_map->s_references->color};
+            draw_line(img, start, end);
+        }
+        x++;
+        s_map = s_map->next;
+    }
+}
+
+static void	draw_vertical_lines(mlx_image_t *img, t_map *s_map, float **cntd_m, int width, int height)
+{
+    int x = 0;
+    t_point start, end;
+
+    while (s_map)
+    {
+        start = (t_point){cntd_m[x][0], cntd_m[x][1], s_map->s_references->color};
+        if (x < (height - 1) * width)
+        {
+            end = (t_point){cntd_m[x + width][0], cntd_m[x + width][1], s_map->s_references->color};
+            draw_line(img, start, end);
+        }
+        x++;
+        s_map = s_map->next;
+    }
+}
+
 static void	draw_map(t_map *s_map, mlx_image_t *img, float **cntd_m)
 {
-	int	x;
-	int	width;
-	int	height;
+    int width = s_map->width;
+    int height = s_map->height;
 
-	x = 0;
-	width = s_map->width;
-	height = s_map->height;
-	t_point start;
-	t_point end;
-	while (s_map)
-	{
-		start = (t_point){cntd_m[x][0], cntd_m[x][1], s_map->s_references->color};
-		if ((x + 1) % width != 0)
-		{
-			end = (t_point){cntd_m[x + 1][0], cntd_m[x + 1][1], s_map->s_references->color};
-			draw_line(img, start, end);
-		}
-		if (x < (height - 1) * width)
-		{
-			end = (t_point){cntd_m[x + width][0], cntd_m[x + width][1], s_map->s_references->color};
-			draw_line(img, start, end);
-		}
-		x++;
-		s_map = s_map->next;
-	}
-	clean_matrix(cntd_m);
+    draw_horizontal_lines(img, s_map, cntd_m, width);
+    draw_vertical_lines(img, s_map, cntd_m, width, height);
+    clean_matrix(cntd_m);
 }
 
 void	render(t_fdf *fdf)

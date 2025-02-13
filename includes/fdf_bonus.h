@@ -85,7 +85,7 @@ typedef struct s_point
 {
 	float	x;
 	float	y;
-	int 	color;
+	int 	c;
 }				t_point;
 
 // FDF INITS
@@ -154,13 +154,7 @@ void move_right(t_map *map, float distance);
 //PROJECTIONS
 void parallel_projection(t_map *s_map, float **map_matrix, int x);
 void isometric_projection(t_map *s_map, float **map_matrix, int x);
-//void oblique_projection(t_map *s_map, float **map_matrix, int x);
-//void perspective_projection(t_map *s_map, float **map_matrix, int x);
-//void dimetric_projection(t_map *s_map, float **map_matrix, int x);
-//void spherical_projection(t_map *s_map, float **map_matrix, int x);
-//void cylindrical_projection(t_map *s_map, float **map_matrix, int x);
 void trimetric_projection(t_map *s_map, float **map_matrix, int x);
-
 
 //DRAW COMMANDS
 void draw_comands(mlx_t *mlx);
