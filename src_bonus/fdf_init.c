@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 11:20:11 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/12 11:20:13 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/13 11:35:16 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,5 @@ void	set_others(t_fdf *fdf)
 	fdf->mouse_x = 0;
 	fdf->mouse_y = 0;
 	fdf->mouse_pressed = 0;
+	fdf->projection = 0;
 }

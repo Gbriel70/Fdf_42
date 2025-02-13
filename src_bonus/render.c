@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 09:23:38 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/12 17:07:03 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/13 13:49:39 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,50 +50,18 @@ static float	**convert_matrix(t_map *s_map, float **map_matrix)
 	return (converted_m);
 }
 
-static void	draw_horizontal_lines(mlx_image_t *img, t_map *s_map, float **cntd_m, int width)
-{
-    int x = 0;
-    t_point start, end;
-
-    while (s_map)
-    {
-        start = (t_point){cntd_m[x][0], cntd_m[x][1], s_map->s_references->color};
-        if ((x + 1) % width != 0)
-        {
-            end = (t_point){cntd_m[x + 1][0], cntd_m[x + 1][1], s_map->s_references->color};
-            draw_line(img, start, end);
-        }
-        x++;
-        s_map = s_map->next;
-    }
-}
-
-static void	draw_vertical_lines(mlx_image_t *img, t_map *s_map, float **cntd_m, int width, int height)
-{
-    int x = 0;
-    t_point start, end;
-
-    while (s_map)
-    {
-        start = (t_point){cntd_m[x][0], cntd_m[x][1], s_map->s_references->color};
-        if (x < (height - 1) * width)
-        {
-            end = (t_point){cntd_m[x + width][0], cntd_m[x + width][1], s_map->s_references->color};
-            draw_line(img, start, end);
-        }
-        x++;
-        s_map = s_map->next;
-    }
-}
-
 static void	draw_map(t_map *s_map, mlx_image_t *img, float **cntd_m)
 {
-    int width = s_map->width;
-    int height = s_map->height;
+	t_drawlines_params	params;
 
-    draw_horizontal_lines(img, s_map, cntd_m, width);
-    draw_vertical_lines(img, s_map, cntd_m, width, height);
-    clean_matrix(cntd_m);
+	params.img = img;
+	params.s_map = s_map;
+	params.cntd_m = cntd_m;
+	params.width = s_map->width;
+	params.height = s_map->height;
+	draw_horizontal_lines(&params);
+	draw_vertical_lines(&params);
+	clean_matrix(cntd_m);
 }
 
 void	render(t_fdf *fdf)

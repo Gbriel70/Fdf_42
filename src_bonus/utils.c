@@ -6,7 +6,7 @@
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 09:24:01 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/12 11:15:09 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/13 11:15:42 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,13 @@ void	clean_matrix(float **map_matrix)
 	int	x;
 
 	x = 0;
+	if (!map_matrix)
+		return ;
 	while (map_matrix[x] != NULL)
-		free(map_matrix[x++]);
+	{
+		free(map_matrix[x]);
+		x++;
+	}
 	free(map_matrix);
 }
 
