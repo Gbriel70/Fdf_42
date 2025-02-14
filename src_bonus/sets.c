@@ -38,8 +38,8 @@ t_data_draw_line	*new_line_data(mlx_image_t *img, t_point start, t_point end)
 	line = (t_data_draw_line *)malloc(sizeof(t_data_draw_line));
 	if (!line)
 		return (NULL);
-	line->dx = abs((int)(end.x - start.x));
-	line->dy = abs((int)(end.y - start.y));
+	line->dx = ft_abs((int)(end.x - start.x));
+	line->dy = ft_abs((int)(end.y - start.y));
 	if (start.x < end.x)
 		line->inc_x = 1;
 	else
@@ -95,13 +95,13 @@ void	cursor_hook(double xpos, double ypos, void *param)
 		dx = xpos - fdf->mouse_x;
 		dy = ypos - fdf->mouse_y;
 		if (dx > 0)
-			move_right(fdf->s_map, dx);
+			move_right(fdf->s_map, dx, fdf->projection);
 		else if (dx < 0)
-			move_left(fdf->s_map, -dx);
+			move_left(fdf->s_map, -dx, fdf->projection);
 		if (dy > 0)
-			move_down(fdf->s_map, dy);
+			move_down(fdf->s_map, dy, fdf->projection);
 		else if (dy < 0)
-			move_up(fdf->s_map, -dy);
+			move_up(fdf->s_map, -dy, fdf->projection);
 		render(fdf);
 	}
 	fdf->mouse_x = xpos;

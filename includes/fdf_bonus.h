@@ -166,10 +166,10 @@ void				zoom_in(t_map *map, float scale);
 void				zoom_out(t_map *map, float scale);
 
 // CAMERA MOVES
-void				move_up(t_map *map, float distance);
-void				move_down(t_map *map, float distance);
-void				move_left(t_map *map, float distance);
-void				move_right(t_map *map, float distance);
+void				move_up(t_map *map, float distance, int projection);
+void				move_down(t_map *map, float distance, int projection);
+void				move_left(t_map *map, float distance, int projection);
+void				move_right(t_map *map, float distance, int projection);
 
 // PROJECTIONS
 void				parallel_projection(t_map *s_map, float **map_matrix,

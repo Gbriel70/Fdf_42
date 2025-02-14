@@ -16,22 +16,22 @@ void	handle_movement_keys(mlx_key_data_t keydata, t_fdf *fdf)
 {
 	if (keydata.key == MLX_KEY_UP && keydata.action == MLX_PRESS)
 	{
-		move_up(fdf->s_map, 10);
+		move_up(fdf->s_map, 10, fdf->projection);
 		render(fdf);
 	}
 	else if (keydata.key == MLX_KEY_DOWN && keydata.action == MLX_PRESS)
 	{
-		move_down(fdf->s_map, 10);
+		move_down(fdf->s_map, 10, fdf->projection);
 		render(fdf);
 	}
 	else if (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS)
 	{
-		move_left(fdf->s_map, 10);
+		move_left(fdf->s_map, 10, fdf->projection);
 		render(fdf);
 	}
 	else if (keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_PRESS)
 	{
-		move_right(fdf->s_map, 10);
+		move_right(fdf->s_map, 10, fdf->projection);
 		render(fdf);
 	}
 }
