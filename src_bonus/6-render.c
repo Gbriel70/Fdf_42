@@ -69,9 +69,16 @@ void	render(t_fdf *fdf)
 	float	**map_matrix;
 	float	**converted_matrix;
 
-	background(fdf->img);
 	map_matrix = get_map_matrix(fdf->s_map, fdf->projection);
+	if (!map_matrix)
+		return ((void)print_return("Error: Memory allocation failed\n",1));
 	converted_matrix = convert_matrix(fdf->s_map, map_matrix);
+	if (!converted_matrix)
+	{
+		clean_matrix(map_matrix);
+		return ((void)print_return("Error: Memory allocation failed\n",1));
+	}
+	background(fdf->img);
 	draw_map(fdf->s_map, fdf->img, converted_matrix);
 	draw_comands(fdf->mlx);
 }
