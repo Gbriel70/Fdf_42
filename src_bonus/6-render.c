@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render.c                                           :+:      :+:    :+:   */
+/*   6-render.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gcosta-m <gcosta-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 09:23:38 by gcosta-m          #+#    #+#             */
-/*   Updated: 2025/02/13 13:49:39 by gcosta-m         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:12:27 by gcosta-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,12 @@ void	render(t_fdf *fdf)
 
 	map_matrix = get_map_matrix(fdf->s_map, fdf->projection);
 	if (!map_matrix)
-		return ((void)print_return("Error: Memory allocation failed\n",1));
+		return ((void)print_return("Error: Memory allocation failed\n", 1));
 	converted_matrix = convert_matrix(fdf->s_map, map_matrix);
 	if (!converted_matrix)
 	{
 		clean_matrix(map_matrix);
-		return ((void)print_return("Error: Memory allocation failed\n",1));
+		return ((void)print_return("Error: Memory allocation failed\n", 1));
 	}
 	background(fdf->img);
 	draw_map(fdf->s_map, fdf->img, converted_matrix);
